@@ -1,4 +1,3 @@
-import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
 import * as store from '@/store';
@@ -73,7 +72,3 @@ export default function Cart() {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  return { props: {} };
-};

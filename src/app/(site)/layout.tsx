@@ -1,5 +1,3 @@
-'use client';
-
 import SiteLayout from '../SiteLayout';
 import type { ReactNode } from 'react';
 
