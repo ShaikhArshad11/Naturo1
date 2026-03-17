@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 95%;
+    --foreground: 150 40% 15%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 150 40% 15%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 40% 15%;
+    
+    --primary: 152 45% 30%;
+    --primary-foreground: 40 33% 95%;
+    
+    --secondary: 40 25% 90%;
+    --secondary-foreground: 150 40% 15%;
+    
+    --muted: 40 20% 92%;
+    --muted-foreground: 150 15% 40%;
+    
+    --accent: 40 25% 90%;
+    --accent-foreground: 150 40% 15%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 40 15% 85%;
+    --input: 40 15% 85%;
+    --ring: 152 45% 30%;
+    
+    --radius: 0.5rem;
+    
+    --dark-green: 153 50% 12%;
+    --dark-green-foreground: 40 33% 95%;
+    --gold: 38 75% 40%;
+    --cream: 40 33% 95%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-dark-green transition-colors duration-200 rounded-lg font-medium;
+  }
+  .btn-outline-primary {
+    @apply border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-200 rounded-lg font-medium;
+  }
+  .section-padding {
+    @apply py-16 md:py-24 px-4 md:px-8;
+  }
+  .container-main {
+    @apply max-w-7xl mx-auto;
+  }
+}
