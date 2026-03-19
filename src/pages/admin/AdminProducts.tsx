@@ -340,7 +340,8 @@ export default function AdminProducts() {
       )}
 
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="w-full overflow-x-auto">
+          <table className="min-w-[720px] w-full text-sm">
           <thead className="bg-muted">
             <tr>
               <th className="text-left px-4 py-3 font-medium text-foreground">Product</th>
@@ -373,7 +374,8 @@ export default function AdminProducts() {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </div>
   );

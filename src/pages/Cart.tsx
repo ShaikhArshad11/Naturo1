@@ -30,12 +30,12 @@ export default function Cart() {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1 space-y-4">
             {cart.map(item => (
-              <div key={item.product.id} className="flex gap-4 bg-card rounded-lg border border-border p-4">
-                <img src={item.product.image} alt={item.product.name} className="w-20 h-20 rounded-md object-cover" />
-                <div className="flex-1">
+              <div key={item.product.id} className="flex flex-col sm:flex-row sm:items-center gap-4 bg-card rounded-lg border border-border p-4">
+                <img src={item.product.image} alt={item.product.name} className="w-20 h-20 rounded-md object-cover shrink-0" />
+                <div className="flex-1 min-w-0">
                   <Link href={`/product/${item.product.id}`} className="font-serif text-lg text-foreground hover:text-primary">{item.product.name}</Link>
                   <p className="text-sm text-muted-foreground">₹{item.product.price}</p>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
                     <div className="flex items-center border border-border rounded">
                       <button onClick={() => handleQty(item.product.id, item.quantity - 1)} className="px-2 py-1 text-sm text-foreground hover:bg-muted">−</button>
                       <span className="px-3 py-1 text-sm text-foreground">{item.quantity}</span>
@@ -46,7 +46,7 @@ export default function Cart() {
                     </button>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="sm:text-right">
                   <span className="font-semibold text-foreground">₹{item.product.price * item.quantity}</span>
                 </div>
               </div>

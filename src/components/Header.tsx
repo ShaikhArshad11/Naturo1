@@ -28,7 +28,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-dark-green">
       <div className="container-main flex items-center justify-between h-16 px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/naturo1.PNG" alt="Naturo Logo" className="h-22 w-12 object-cover" />
+          <img src="/naturo1.PNG" alt="Naturo Logo" className="h-10 w-10 object-cover" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

@@ -122,9 +122,9 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <button onClick={handleAddToCart} className="btn-primary px-8 py-3 flex-1">Add to Cart</button>
-              <button onClick={handleBuyNow} className="btn-outline-primary px-8 py-3 flex-1">Buy Now</button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button onClick={handleAddToCart} className="btn-primary px-6 py-3 flex-1">Add to Cart</button>
+              <button onClick={handleBuyNow} className="btn-outline-primary px-6 py-3 flex-1">Buy Now</button>
             </div>
           </div>
         </div>

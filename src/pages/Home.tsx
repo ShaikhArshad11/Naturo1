@@ -1035,7 +1035,7 @@ export default function Home() {
                 {[{ label: 'Name *', key: 'name', type: 'text' }, { label: 'Email', key: 'email', type: 'email' }].map(f => (
                   <div key={f.key}>
                     <label className="block text-sm font-medium text-foreground mb-1.5">{f.label}</label>
-                    <input type={f.type} value={(reviewForm as any)[f.key]}
+                    <input type={f.type} value={reviewForm[f.key as keyof typeof reviewForm]}
                       onChange={e => setReviewForm({ ...reviewForm, [f.key]: e.target.value })}
                       className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm
                                  focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all

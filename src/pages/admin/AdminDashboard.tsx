@@ -185,26 +185,28 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground text-sm">No orders yet.</p>
       ) : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-muted">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium text-foreground">Order ID</th>
-                <th className="text-left px-4 py-3 font-medium text-foreground">Date</th>
-                <th className="text-left px-4 py-3 font-medium text-foreground">Total</th>
-                <th className="text-left px-4 py-3 font-medium text-foreground">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map(o => (
-                <tr key={o.id} className="border-t border-border">
-                  <td className="px-4 py-3 text-foreground">#{o.id.slice(0, 8)}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 text-foreground font-medium">₹{o.total}</td>
-                  <td className="px-4 py-3"><span className="capitalize text-primary font-medium">{o.status}</span></td>
+          <div className="w-full overflow-x-auto">
+            <table className="min-w-[720px] w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Order ID</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Date</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Total</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {recentOrders.map(o => (
+                  <tr key={o.id} className="border-t border-border">
+                    <td className="px-4 py-3 text-foreground">#{o.id.slice(0, 8)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-foreground font-medium">₹{o.total}</td>
+                    <td className="px-4 py-3"><span className="capitalize text-primary font-medium">{o.status}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
