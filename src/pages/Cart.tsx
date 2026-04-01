@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
 import * as store from '@/store';
 import { Trash2 } from 'lucide-react';
@@ -31,7 +32,7 @@ export default function Cart() {
           <div className="flex-1 space-y-4">
             {cart.map(item => (
               <div key={item.product.id} className="flex flex-col sm:flex-row sm:items-center gap-4 bg-card rounded-lg border border-border p-4">
-                <img src={item.product.image} alt={item.product.name} className="w-20 h-20 rounded-md object-cover shrink-0" />
+                <Image src={item.product.image} alt={item.product.name} width={80} height={80} className="w-20 h-20 rounded-md object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
                   <Link href={`/product/${item.product.id}`} className="font-serif text-lg text-foreground hover:text-primary">{item.product.name}</Link>
                   <p className="text-sm text-muted-foreground">₹{item.product.price}</p>

@@ -86,7 +86,6 @@ export async function PATCH(req: Request, ctx: Params) {
     if (typeof body.originalPrice === 'number' && Number.isFinite(body.originalPrice) && body.originalPrice > 0) update.originalPrice = body.originalPrice;
 
     if (typeof body.image === 'string') update.image = body.image.trim();
-    if (typeof body.image2 === 'string') update.image2 = body.image2.trim();
 
     if (Array.isArray(body.benefits)) {
       update.benefits = body.benefits.filter((b) => typeof b === 'string' && b.trim()).map((b) => (b as string).trim());

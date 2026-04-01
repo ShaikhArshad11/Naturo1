@@ -352,52 +352,6 @@ import { Review, Product } from '@/types';
 import { useApp } from '@/context/AppContext';
 import { Leaf, ShieldCheck, Award, Truck, Heart, Star, X, ArrowRight, Sparkles } from 'lucide-react';
 
-const categoryEmoji: Record<string, string> = {
-  'Herbal Juices': '🍃',
-  'Natural Supplements': '💊',
-  'Immunity Boosters': '🛡️',
-  'Ayurvedic Powders': '🫙',
-  'Natural Skincare': '🌿',
-};
-
-const categoryStyle: Record<string, { glow: string; iconBg: string; iconBgH: string; pillBg: string; pillBgH: string }> = {
-  'Herbal Juices': {
-    glow: '#4ade80',
-    iconBg: 'rgba(74,222,128,0.12)',
-    iconBgH: 'rgba(74,222,128,0.22)',
-    pillBg: 'rgba(74,222,128,0.10)',
-    pillBgH: 'rgba(74,222,128,0.20)',
-  },
-  'Natural Supplements': {
-    glow: '#60a5fa',
-    iconBg: 'rgba(96,165,250,0.12)',
-    iconBgH: 'rgba(96,165,250,0.22)',
-    pillBg: 'rgba(96,165,250,0.10)',
-    pillBgH: 'rgba(96,165,250,0.20)',
-  },
-  'Immunity Boosters': {
-    glow: '#f59e0b',
-    iconBg: 'rgba(245,158,11,0.12)',
-    iconBgH: 'rgba(245,158,11,0.22)',
-    pillBg: 'rgba(245,158,11,0.10)',
-    pillBgH: 'rgba(245,158,11,0.20)',
-  },
-  'Ayurvedic Powders': {
-    glow: '#a78bfa',
-    iconBg: 'rgba(167,139,250,0.12)',
-    iconBgH: 'rgba(167,139,250,0.22)',
-    pillBg: 'rgba(167,139,250,0.10)',
-    pillBgH: 'rgba(167,139,250,0.20)',
-  },
-  'Natural Skincare': {
-    glow: '#f472b6',
-    iconBg: 'rgba(244,114,182,0.12)',
-    iconBgH: 'rgba(244,114,182,0.22)',
-    pillBg: 'rgba(244,114,182,0.10)',
-    pillBgH: 'rgba(244,114,182,0.20)',
-  },
-};
-
 const commitments = [
   { icon: Leaf, title: '100% Natural', desc: 'Every ingredient is sourced from nature, no synthetics ever.', color: '#4ade80' },
   { icon: ShieldCheck, title: 'Chemical-Free', desc: 'No harmful chemicals, preservatives, or artificial additives.', color: '#60a5fa' },
@@ -564,19 +518,9 @@ export default function Home() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const featured = products.filter(p => p.featured || p.bestSeller).slice(0, 8);
 
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    for (const p of products) {
-      if (typeof p.category === 'string' && p.category.trim()) set.add(p.category.trim());
-    }
-    return Array.from(set).sort((a, b) => a.localeCompare(b)).slice(0, 10)
-      .map((name) => ({ name, emoji: categoryEmoji[name] ?? '🛍️' }));
-  }, [products]);
-
   const allTestimonials = reviews.map(r => ({ name: r.name, text: r.text, rating: r.rating }));
 
   const heroAnim = useScrollAnimation(0.1);
-  const catAnim = useScrollAnimation();
   const prodAnim = useScrollAnimation();
   const whyAnim = useScrollAnimation();
   const testAnim = useScrollAnimation();
@@ -885,69 +829,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* ── CATEGORIES ── */}
-        <section ref={catAnim.ref} className="section-padding bg-card" style={{ position: 'relative', overflow: 'hidden' }}>
-  {/* Subtle ambient background blobs */}
-  <div aria-hidden="true" style={{
-    position: 'absolute', inset: 0, pointerEvents: 'none',
-    background: 'radial-gradient(circle at 8% 50%, rgba(45,106,79,0.05) 0%, transparent 45%), radial-gradient(circle at 92% 60%, rgba(45,106,79,0.04) 0%, transparent 45%)',
-  }} />
- 
-  <div className={`container-main naturo-reveal ${catAnim.isVisible ? '' : 'hidden'}`}>
-    {/* Header */}
-    <div className="text-center mb-12">
-      <div className="inline-flex items-center gap-2 mb-3">
-        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-primary)', display: 'inline-block' }} />
-        <span className="text-primary text-xs font-medium uppercase tracking-widest">Categories</span>
-        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-primary)', display: 'inline-block' }} />
-      </div>
-      <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-1">Shop by Category</h2>
-      <p className="text-muted-foreground text-sm mt-3 max-w-sm mx-auto leading-relaxed">
-        Explore our curated range of natural wellness products rooted in Ayurvedic tradition.
-      </p>
-    </div>
- 
-    {/* Cards */}
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5 naturo-stagger">
-      {categories.map((c, i) => {
-        const s = categoryStyle[c.name];
-        return (
-          <Link
-            key={c.name}
-            href={`/shop?category=${encodeURIComponent(c.name)}`}
-            className="naturo-cat-card"
-            style={{
-              animationDelay: `${i * 90}ms`,
-              ['--cat-glow' as string]: s?.glow ?? '#2d6a4f',
-              ['--cat-icon-bg' as string]: s?.iconBg ?? 'rgba(45,106,79,0.1)',
-              ['--cat-icon-bg-h' as string]: s?.iconBgH ?? 'rgba(45,106,79,0.2)',
-              ['--cat-pill-bg' as string]: s?.pillBg ?? 'rgba(45,106,79,0.08)',
-              ['--cat-pill-h' as string]: s?.pillBgH ?? 'rgba(45,106,79,0.18)',
-            } as React.CSSProperties}
-          >
-            <div className="naturo-cat-icon">
-              <span className="naturo-cat-emoji">{c.emoji}</span>
-            </div>
-            <span className="naturo-cat-name">{c.name}</span>
-            <span className="naturo-cat-pill">Shop now →</span>
-          </Link>
-        );
-      })}
-    </div>
- 
-    {/* CTA */}
-    <div className="text-center mt-10">
-      <Link
-        href="/shop"
-        className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-medium border-2 border-primary text-primary
-                   transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-105 hover:shadow-lg active:scale-95"
-      >
-        View All Categories <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  </div>
-</section>
 
         {/* ── BEST SELLERS ── */}
         <section ref={prodAnim.ref} className="section-padding">

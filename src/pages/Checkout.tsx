@@ -47,7 +47,7 @@ export default function Checkout() {
   const [shipping, setShipping] = useState<Address>({ street: '', city: '', state: '', pincode: '', country: 'India' });
   const [sameAsBilling, setSameAsBilling] = useState(true);
   const [billing, setBilling] = useState<Address>({ street: '', city: '', state: '', pincode: '', country: 'India' });
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'cod' | 'razorpay'>('cod');
+  const [paymentMethod, setPaymentMethod] = useState<'razorpay'>('razorpay');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   useEffect(() => {
@@ -234,24 +234,7 @@ export default function Checkout() {
       return;
     }
 
-    if (paymentMethod === 'razorpay') {
-      await handleRazorpay();
-      return;
-    }
-
-    try {
-      setIsPlacingOrder(true);
-      const order = createOrderObj();
-      await persistOrder(order);
-      store.clearCart();
-      refreshCart();
-      toast.success('Order placed successfully!');
-      router.push(`/order-success/${order.id}`);
-    } catch {
-      toast.error('Failed to place order');
-    } finally {
-      setIsPlacingOrder(false);
-    }
+    await handleRazorpay();
   };
 
   return (
@@ -335,9 +318,6 @@ export default function Checkout() {
                 <h3 className="font-serif text-xl text-foreground mb-4">Payment Method</h3>
                 <div className="space-y-3">
                   {([
-                    { key: 'cod', label: 'Cash on Delivery' },
-                    { key: 'upi', label: 'UPI' },
-                    { key: 'card', label: 'Card' },
                     { key: 'razorpay', label: 'Pay with Razorpay' },
                   ] as const).map(m => (
                     <label key={m.key} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-border hover:border-primary/30 transition-colors">
@@ -366,7 +346,7 @@ export default function Checkout() {
                 <div className="border-t border-border pt-2 flex justify-between font-semibold text-foreground"><span>Total</span><span>₹{cartTotal}</span></div>
               </div>
               <button type="submit" disabled={isPlacingOrder} className="btn-primary w-full mt-6 py-3 text-sm disabled:opacity-70">
-                {paymentMethod === 'razorpay' ? (isPlacingOrder ? 'Opening Razorpay...' : 'Pay with Razorpay') : (isPlacingOrder ? 'Placing Order...' : 'Place Order')}
+                {isPlacingOrder ? 'Opening Razorpay...' : 'Pay with Razorpay'}
               </button>
             </div>
           </div>

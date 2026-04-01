@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
+import Image from 'next/image';
 import { Product } from '@/types';
 import { toast } from 'sonner';
 import { Pencil, Trash2, Plus, X, Upload } from 'lucide-react';
@@ -79,6 +80,7 @@ async function uploadToCloudinary(file: File, folder = 'products'): Promise<stri
   formData.append('timestamp', String(sig.timestamp));
   formData.append('signature', sig.signature);
   formData.append('folder', sig.folder);
+  formData.append('transformation', 'w_1200,h_1200,c_limit,q_auto,f_auto');
 
   const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
     method: 'POST',
@@ -86,16 +88,16 @@ async function uploadToCloudinary(file: File, folder = 'products'): Promise<stri
   });
 
   if (!uploadRes.ok) throw new Error('Upload failed');
-  const uploadData = (await uploadRes.json()) as { secure_url?: string };
-  if (!uploadData.secure_url) throw new Error('Upload response missing url');
-  return uploadData.secure_url;
+  const uploadData = (await uploadRes.json()) as { public_id?: string };
+  if (!uploadData.public_id) throw new Error('Upload response missing public_id');
+  return uploadData.public_id;
 }
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editing, setEditing] = useState<Product | null>(null);
   const [isNew, setIsNew] = useState(false);
-  const [form, setForm] = useState<Partial<Product> & { benefits: string[]; ingredients: string[]; image2?: string }>(emptyProduct);
+  const [form, setForm] = useState<Partial<Product> & { benefits: string[]; ingredients: string[] }>(emptyProduct);
 
   const refresh = async () => {
     const list = await fetchProducts();
@@ -123,7 +125,7 @@ export default function AdminProducts() {
 
   const close = () => { setEditing(null); setIsNew(false); };
 
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, field: 'image' | 'image2') => {
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { toast.error('Please select an image file'); return; }
@@ -131,10 +133,10 @@ export default function AdminProducts() {
 
     try {
       const url = await uploadToCloudinary(file, 'products');
-      setForm({ ...form, [field]: url });
+      setForm({ ...form, image: url });
     } catch {
       const dataUrl = await fileToDataUrl(file);
-      setForm({ ...form, [field]: dataUrl });
+      setForm({ ...form, image: dataUrl });
       toast.error('Image upload failed. Using local preview only. Please try again.');
     }
   };
@@ -152,11 +154,11 @@ export default function AdminProducts() {
       }
 
       if (isNew) {
-        const product: Product = { ...(form as Product), id: crypto.randomUUID(), benefits, ingredients, createdAt: new Date().toISOString() };
+        const product: Product = { ...(form as Product), id: crypto.randomUUID(), benefits, ingredients, createdAt: new Date().toISOString(), image2: undefined };
         await createProduct(product);
         toast.success('Product added');
       } else if (editing) {
-        await patchProduct(editing.id, { ...(form as Product), benefits, ingredients });
+        await patchProduct(editing.id, { ...(form as Product), benefits, ingredients, image2: undefined });
         toast.success('Product updated');
       }
 
@@ -188,7 +190,7 @@ export default function AdminProducts() {
     originalPrice: typeof form.originalPrice === 'number' && form.originalPrice > 0 ? form.originalPrice : undefined,
     category: form.category ?? '',
     image: form.image ?? '',
-    image2: form.image2,
+    image2: undefined,
     benefits: form.benefits ?? [],
     ingredients: form.ingredients ?? [],
     usage: form.usage ?? '',
@@ -245,25 +247,10 @@ export default function AdminProducts() {
                 <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-border bg-background cursor-pointer hover:border-primary transition-colors">
                   <Upload className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Choose file</span>
-                  <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'image')} className="hidden" />
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                 </label>
                 {form.image && (
-                  <img src={form.image} alt="Preview" className="w-20 h-20 rounded-lg object-cover border border-border" />
-                )}
-              </div>
-            </div>
-
-            {/* Image 2 Upload */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Secondary Image (optional)</label>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-border bg-background cursor-pointer hover:border-primary transition-colors">
-                  <Upload className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Choose file</span>
-                  <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'image2')} className="hidden" />
-                </label>
-                {form.image2 && (
-                  <img src={form.image2} alt="Preview 2" className="w-20 h-20 rounded-lg object-cover border border-border" />
+                  <Image src={form.image} alt="Preview" width={80} height={80} className="w-20 h-20 rounded-lg object-cover border border-border" />
                 )}
               </div>
             </div>
@@ -274,7 +261,9 @@ export default function AdminProducts() {
                 <div className="bg-card rounded-xl border border-border overflow-hidden">
                   <div className="aspect-square overflow-hidden bg-muted">
                     {previewProduct.image ? (
-                      <img src={previewProduct.image} alt={previewProduct.name} className="w-full h-full object-cover" />
+                      <div className="relative w-full h-full">
+                        <Image src={previewProduct.image} alt={previewProduct.name} fill sizes="320px" className="object-cover" />
+                      </div>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">No image</div>
                     )}
@@ -356,7 +345,7 @@ export default function AdminProducts() {
               <tr key={p.id} className="border-t border-border">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <img src={p.image} alt={p.name} className="w-10 h-10 rounded object-cover" />
+                    <Image src={p.image} alt={p.name} width={40} height={40} className="w-10 h-10 rounded object-cover" />
                     <span className="text-foreground font-medium">{p.name}</span>
                   </div>
                 </td>

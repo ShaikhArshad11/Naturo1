@@ -51,8 +51,8 @@ export default function Contact() {
           {/* Info Cards */}
           <div ref={infoAnim.ref} className={`lg:col-span-2 space-y-4 transition-all duration-700 ${infoAnim.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             {[
-              { icon: MapPin, label: 'Visit Us', value: 'Mumbai, Maharashtra, India' },
-              { icon: Phone, label: 'Call Us', value: '+91 9607555963' },
+              { icon: MapPin, label: 'Visit Us', value: '01, Gadhinglaj, 416502' },
+              { icon: Phone, label: 'Call Us', value: '90675 62168' },
               { icon: Mail, label: 'Email Us', value: 'info@naturo.com' },
             ].map(item => (
               <div key={item.label} className="bg-card rounded-xl border border-border p-5 flex items-start gap-4 hover:shadow-md transition-shadow">

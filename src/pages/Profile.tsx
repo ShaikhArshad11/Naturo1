@@ -1,5 +1,6 @@
 import { useApp } from '@/context/AppContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Order } from '@/types';
@@ -106,7 +107,7 @@ export default function Profile() {
                           <p className="text-xs font-medium text-foreground mb-2">Items:</p>
                           {order.items.map(item => (
                             <div key={item.product.id} className="flex items-center gap-3 mb-2">
-                              <img src={item.product.image} alt={item.product.name} className="w-10 h-10 rounded object-cover" />
+                              <Image src={item.product.image} alt={item.product.name} width={40} height={40} className="w-10 h-10 rounded object-cover" />
                               <div className="flex-1">
                                 <p className="text-sm text-foreground">{item.product.name}</p>
                                 <p className="text-xs text-muted-foreground">Qty: {item.quantity} × ₹{item.product.price}</p>

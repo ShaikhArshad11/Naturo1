@@ -81,7 +81,7 @@ export async function POST(req: Request) {
     const originalPrice = typeof body.originalPrice === 'number' ? body.originalPrice : undefined;
 
     const image = typeof body.image === 'string' ? body.image.trim() : '';
-    const image2 = typeof body.image2 === 'string' ? body.image2.trim() : undefined;
+    const image2 = undefined;
 
     const benefits = Array.isArray(body.benefits) ? body.benefits.filter((b) => typeof b === 'string' && b.trim()).map((b) => (b as string).trim()) : [];
     const ingredients = Array.isArray(body.ingredients)

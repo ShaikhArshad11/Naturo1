@@ -12,7 +12,15 @@ export async function POST(req: Request) {
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
     if (!cloudName || !apiKey || !apiSecret) {
-      return NextResponse.json({ error: 'Cloudinary not configured' }, { status: 500 });
+      const missing = [
+        !cloudName ? 'CLOUDINARY_CLOUD_NAME' : null,
+        !apiKey ? 'CLOUDINARY_API_KEY' : null,
+        !apiSecret ? 'CLOUDINARY_API_SECRET' : null,
+      ].filter(Boolean);
+      return NextResponse.json(
+        { error: 'Cloudinary not configured', missing },
+        { status: 500 }
+      );
     }
 
     const body = (await req.json().catch(() => ({}))) as Body;

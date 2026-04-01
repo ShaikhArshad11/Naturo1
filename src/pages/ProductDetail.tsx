@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import * as store from '@/store';
@@ -79,7 +80,9 @@ export default function ProductDetail() {
           {/* Left - Image */}
           <div className="lg:w-1/2">
             <div className="aspect-square rounded-lg overflow-hidden border border-border bg-card">
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              <div className="relative w-full h-full">
+                <Image src={product.image} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+              </div>
             </div>
           </div>
 
