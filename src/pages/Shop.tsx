@@ -67,45 +67,70 @@ export default function Shop() {
     else router.push('/shop');
   };
 
+  const clearFilters = () => {
+    setSelectedCategory('');
+    setSortBy('');
+    setPriceRange([0, 200000]);
+    router.push('/shop');
+  };
+
   return (
     <div className="section-padding">
       <div className="container-main">
-        <h1 className="text-3xl md:text-4xl font-serif text-foreground mb-8">Shop</h1>
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <p className="text-primary text-sm font-medium uppercase tracking-widest">Shop</p>
+              <h1 className="text-3xl md:text-5xl font-serif text-foreground mt-2">Explore Our Collection</h1>
+              <p className="text-muted-foreground text-sm mt-2 max-w-xl">
+                Premium cashews and dry fruits, handpicked for freshness and quality.
+              </p>
+            </div>
+
+            {!loading && (
+              <div className="text-sm text-muted-foreground">
+                {filtered.length} product{filtered.length !== 1 ? 's' : ''} found
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
-          <aside className="lg:w-64 shrink-0">
-            <div className="space-y-6">
+          <aside className="lg:w-72 shrink-0">
+            <div className="bg-card rounded-2xl border border-border p-6 space-y-6 lg:sticky lg:top-24">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold text-foreground">Filters</div>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+
               <div>
                 <h3 className="font-sans font-semibold text-sm uppercase tracking-wider text-foreground mb-3">Category</h3>
                 <div className="space-y-2">
-                  <button onClick={() => handleCatChange('')} className={`block text-sm w-full text-left px-3 py-2 rounded-md transition-colors ${!selectedCategory ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                  <button onClick={() => handleCatChange('')} className={`block text-sm w-full text-left px-3 py-2.5 rounded-xl transition-colors border ${!selectedCategory ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground hover:text-foreground hover:border-primary/40'}`}>
                     All Products
                   </button>
                   {categories.map(c => (
-                    <button key={c} onClick={() => handleCatChange(c)} className={`block text-sm w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === c ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                    <button key={c} onClick={() => handleCatChange(c)} className={`block text-sm w-full text-left px-3 py-2.5 rounded-xl transition-colors border ${selectedCategory === c ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground hover:text-foreground hover:border-primary/40'}`}>
                       {c}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 className="font-sans font-semibold text-sm uppercase tracking-wider text-foreground mb-3">Sort By</h3>
-                <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="w-full px-3 py-2 rounded-md border border-border bg-card text-sm text-foreground">
-                  <option value="">Default</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="best-selling">Best Selling</option>
-                  <option value="newest">New Arrivals</option>
-                </select>
-              </div>
-              <div>
                 <h3 className="font-sans font-semibold text-sm uppercase tracking-wider text-foreground mb-3">Price Range</h3>
                 <div className="flex gap-2 items-center text-sm">
                   <input type="number" value={priceRange[0]} onChange={e => setPriceRange([+e.target.value, priceRange[1]])}
-                    className="w-20 px-2 py-1 rounded border border-border bg-card text-foreground" placeholder="Min" />
+                    className="w-24 px-3 py-2 rounded-xl border border-border bg-background text-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Min" />
                   <span className="text-muted-foreground">–</span>
                   <input type="number" value={priceRange[1]} onChange={e => setPriceRange([priceRange[0], +e.target.value])}
-                    className="w-20 px-2 py-1 rounded border border-border bg-card text-foreground" placeholder="Max" />
+                    className="w-24 px-3 py-2 rounded-xl border border-border bg-background text-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Max" />
                 </div>
               </div>
             </div>
@@ -113,19 +138,53 @@ export default function Shop() {
 
           {/* Products */}
           <div className="flex-1">
-            {loading ? (
-              <p className="text-center text-muted-foreground py-16">Loading products...</p>
-            ) : (
-              <p className="text-sm text-muted-foreground mb-4">{filtered.length} product{filtered.length !== 1 ? 's' : ''} found</p>
+            {!loading && (
+              <div className="mb-6 bg-card rounded-2xl border border-border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="text-sm text-muted-foreground">
+                  Showing <span className="text-foreground font-medium">{filtered.length}</span> result{filtered.length !== 1 ? 's' : ''}
+                  {selectedCategory ? (
+                    <>
+                      {' '}in <span className="text-foreground font-medium">{selectedCategory}</span>
+                    </>
+                  ) : null}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <select
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value)}
+                    className="w-full sm:w-56 px-4 py-2.5 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  >
+                    <option value="">Sort: Default</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="best-selling">Best Selling</option>
+                    <option value="newest">New Arrivals</option>
+                  </select>
+                  <button type="button" onClick={clearFilters} className="btn-outline-primary px-4 py-2.5 text-sm rounded-xl">
+                    Clear
+                  </button>
+                </div>
+              </div>
             )}
 
-            {!loading && filtered.length > 0 ? (
+            {loading ? (
+              <div className="bg-card rounded-2xl border border-border p-10 text-center">
+                <p className="text-muted-foreground">Loading products...</p>
+              </div>
+            ) : filtered.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filtered.map(p => <ProductCard key={p.id} product={p} />)}
               </div>
-            ) : !loading ? (
-              <p className="text-center text-muted-foreground py-16">No products found matching your criteria.</p>
-            ) : null}
+            ) : (
+              <div className="bg-card rounded-2xl border border-border p-10 text-center">
+                <p className="text-foreground font-medium">No products found</p>
+                <p className="text-muted-foreground text-sm mt-1">Try changing category, sort, or price range.</p>
+                <button type="button" onClick={clearFilters} className="btn-primary mt-5 px-6 py-2.5 text-sm rounded-xl">
+                  Reset Filters
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

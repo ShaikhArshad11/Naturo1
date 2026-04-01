@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-dark-green text-dark-green-foreground">
       <div className="container-main section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
               <img src="/naturo1.PNG" alt="Naturo Logo" className="h-16 w-16 object-cover" />
@@ -17,7 +17,7 @@ export default function Footer() {
             <h4 className="font-sans font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-dark-green-foreground/70">
               {[{l:'Home',t:'/'},{l:'Shop',t:'/shop'},{l:'Contact',t:'/contact'}].map(i=>(
-                <li key={i.t}><Link href={i.t} className="hover:text-dark-green-foreground transition-colors">{i.l}</Link></li>
+                <li key={i.t}><Link href={i.t} className="hover:text-dark-green-foreground transition-colors hover:underline underline-offset-4">{i.l}</Link></li>
               ))}
             </ul>
           </div>
@@ -26,14 +26,14 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-dark-green-foreground/70">
               {[{ l: 'Privacy Policy', t: '/policies#privacy' }, { l: 'Terms & Conditions', t: '/policies#terms' }, { l: 'Refund Policy', t: '/policies#refund' }].map(i => (
                 <li key={i.t}>
-                  <Link href={i.t} className="hover:text-dark-green-foreground transition-colors">{i.l}</Link>
+                  <Link href={i.t} className="hover:text-dark-green-foreground transition-colors hover:underline underline-offset-4">{i.l}</Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
             <h4 className="font-sans font-semibold text-sm uppercase tracking-wider mb-4">Contact</h4>
-            <ul className="space-y-2 text-sm text-dark-green-foreground/70">
+            <ul className="space-y-2 text-sm text-dark-green-foreground/70 leading-relaxed">
               <li>surajnaturoservices@gmail.com</li>
               <li>+91 90675 62168</li>
               <li>01, Gadhinglaj, 416502</li>

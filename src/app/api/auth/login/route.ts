@@ -164,11 +164,12 @@ type LoginBody = {
 
 async function ensureDefaultAdmin() {
   const db = await getDb();
-  const email = 'admin@naturo.com';
+  const email = (process.env.ADMIN_PANEL_EMAIL || 'admin@naturo.com').trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_PANEL_PASSWORD || 'admin123';
   const existing = await db.collection('users').findOne({ email });
   if (existing) return;
 
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   await db.collection('users').insertOne({
     name: 'Admin',
     email,

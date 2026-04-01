@@ -240,44 +240,65 @@ export default function Checkout() {
   return (
     <div className="section-padding">
       <div className="container-main">
-        <h1 className="text-3xl md:text-4xl font-serif text-foreground mb-8">Checkout</h1>
+        <div className="mb-8">
+          <p className="text-primary text-sm font-medium uppercase tracking-widest">Checkout</p>
+          <h1 className="text-3xl md:text-5xl font-serif text-foreground mt-2">Secure Checkout</h1>
+          <p className="text-muted-foreground text-sm mt-2 max-w-xl">
+            Confirm your address and complete payment to place your order.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { n: 1, label: 'Address' },
+              { n: 2, label: 'Payment' },
+              { n: 3, label: 'Confirmation' },
+            ].map(s => (
+              <div key={s.n} className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-semibold">
+                  {s.n}
+                </div>
+                <div className="text-sm font-medium text-foreground">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="flex-1 space-y-6">
               {/* Shipping */}
-              <div className="bg-card rounded-xl border border-border p-6">
+              <div className="bg-card rounded-2xl border border-border p-6">
                 <h3 className="font-serif text-xl text-foreground mb-4">Shipping Address</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-foreground mb-1">Street Address</label>
                     <input value={shipping.street} onChange={e => setShipping({ ...shipping, street: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
+                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1">City</label>
                     <input value={shipping.city} onChange={e => setShipping({ ...shipping, city: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
+                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1">State</label>
                     <input value={shipping.state} onChange={e => setShipping({ ...shipping, state: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
+                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1">Pincode</label>
                     <input value={shipping.pincode} onChange={e => setShipping({ ...shipping, pincode: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
+                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" required />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1">Country</label>
                     <input value={shipping.country} onChange={e => setShipping({ ...shipping, country: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" />
+                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" />
                   </div>
                 </div>
               </div>
 
               {/* Billing */}
-              <div className="bg-card rounded-xl border border-border p-6">
+              <div className="bg-card rounded-2xl border border-border p-6">
                 <label className="flex items-center gap-2 mb-4">
                   <input type="checkbox" checked={sameAsBilling} onChange={e => setSameAsBilling(e.target.checked)} className="accent-primary" />
                   <span className="text-sm text-foreground">Billing address same as shipping</span>
@@ -287,40 +308,40 @@ export default function Checkout() {
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-foreground mb-1">Street Address</label>
                       <input value={billing.street} onChange={e => setBilling({ ...billing, street: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" required />
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1">City</label>
                       <input value={billing.city} onChange={e => setBilling({ ...billing, city: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" required />
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1">State</label>
                       <input value={billing.state} onChange={e => setBilling({ ...billing, state: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" required />
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1">Pincode</label>
                       <input value={billing.pincode} onChange={e => setBilling({ ...billing, pincode: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" required />
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1">Country</label>
                       <input value={billing.country} onChange={e => setBilling({ ...billing, country: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm" />
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm" />
                     </div>
                   </div>
                 )}
               </div>
 
               {/* Payment */}
-              <div className="bg-card rounded-xl border border-border p-6">
+              <div className="bg-card rounded-2xl border border-border p-6">
                 <h3 className="font-serif text-xl text-foreground mb-4">Payment Method</h3>
                 <div className="space-y-3">
                   {([
                     { key: 'razorpay', label: 'Pay with Razorpay' },
                   ] as const).map(m => (
-                    <label key={m.key} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-border hover:border-primary/30 transition-colors">
+                    <label key={m.key} className="flex items-center gap-3 cursor-pointer p-4 rounded-2xl border border-border hover:border-primary/30 transition-colors">
                       <input type="radio" name="payment" checked={paymentMethod === m.key} onChange={() => setPaymentMethod(m.key)} className="accent-primary" />
                       <span className="text-sm text-foreground">{m.label}</span>
                     </label>
@@ -330,13 +351,16 @@ export default function Checkout() {
             </div>
 
             {/* Summary */}
-            <div className="lg:w-80 bg-card rounded-xl border border-border p-6 h-fit lg:sticky lg:top-24">
+            <div className="lg:w-80 bg-card rounded-2xl border border-border p-6 h-fit lg:sticky lg:top-24">
               <h3 className="font-serif text-xl text-foreground mb-4">Order Summary</h3>
               <div className="space-y-3 mb-4">
                 {cart.map(item => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{item.product.name} × {item.quantity}</span>
-                    <span className="text-foreground">₹{item.product.price * item.quantity}</span>
+                  <div key={item.product.id} className="flex items-start justify-between gap-3 text-sm">
+                    <span className="text-muted-foreground leading-snug">
+                      {item.product.name}
+                      <span className="text-muted-foreground"> × {item.quantity}</span>
+                    </span>
+                    <span className="text-foreground font-medium whitespace-nowrap">₹{item.product.price * item.quantity}</span>
                   </div>
                 ))}
               </div>
@@ -345,6 +369,9 @@ export default function Checkout() {
                 <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span>Free</span></div>
                 <div className="border-t border-border pt-2 flex justify-between font-semibold text-foreground"><span>Total</span><span>₹{cartTotal}</span></div>
               </div>
+              <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+                Payments are processed securely via Razorpay.
+              </p>
               <button type="submit" disabled={isPlacingOrder} className="btn-primary w-full mt-6 py-3 text-sm disabled:opacity-70">
                 {isPlacingOrder ? 'Opening Razorpay...' : 'Pay with Razorpay'}
               </button>
