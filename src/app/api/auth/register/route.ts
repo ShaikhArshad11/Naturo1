@@ -2,6 +2,34 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getDb } from '@/lib/mongo';
 
+async function sendWelcomeEmail(params: { to: string; name: string }) {
+  const host = process.env.EMAIL_HOST;
+  const portRaw = process.env.EMAIL_PORT;
+  const user = process.env.EMAIL_HOST_USER;
+  const pass = process.env.EMAIL_HOST_PASSWORD;
+  const useSsl = (process.env.EMAIL_USE_SSL ?? '').toLowerCase() === 'true';
+  const useTls = (process.env.EMAIL_USE_TLS ?? '').toLowerCase() === 'true';
+
+  const port = portRaw ? Number(portRaw) : undefined;
+  if (!host || !port || !user || !pass) return;
+
+  const nodemailer = (await import('nodemailer')).default;
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: useSsl,
+    auth: { user, pass },
+    tls: useTls ? { rejectUnauthorized: false } : undefined,
+  });
+
+  await transporter.sendMail({
+    from: `Suraj Naturo <${user}>`,
+    to: params.to,
+    subject: 'Welcome to Suraj Naturo Cashews & Dry Fruits',
+    text: `Hi ${params.name || 'there'},\n\nWelcome to Suraj Naturo Cashews & Dry Fruits!\n\nThank you for registering with us.`,
+  });
+}
+
 type RegisterBody = {
   name?: string;
   email?: string;
@@ -39,6 +67,8 @@ export async function POST(req: Request) {
       role: 'customer',
       createdAt,
     });
+
+    void sendWelcomeEmail({ to: email, name }).catch(() => undefined);
 
     return NextResponse.json(
       {
