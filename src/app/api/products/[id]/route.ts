@@ -32,7 +32,15 @@ export async function GET(_req: Request, ctx: Params) {
     const db = await getDb();
     const doc = await db
       .collection('products')
-      .findOne({ $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] });
+      .findOne({
+        $or: [
+          { productId: id },
+          { id },
+          { productID: id },
+          { product_id: id },
+          ...(objectId ? [{ _id: objectId }] : []),
+        ],
+      });
     if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     const createdAtVal = (doc as unknown as { createdAt?: unknown }).createdAt;
@@ -109,7 +117,15 @@ export async function PATCH(req: Request, ctx: Params) {
 
     const db = await getDb();
     const res = await db.collection('products').findOneAndUpdate(
-      { $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] },
+      {
+        $or: [
+          { productId: id },
+          { id },
+          { productID: id },
+          { product_id: id },
+          ...(objectId ? [{ _id: objectId }] : []),
+        ],
+      },
       { $set: update },
       { returnDocument: 'after' },
     );
@@ -165,7 +181,15 @@ export async function DELETE(_req: Request, ctx: Params) {
     const db = await getDb();
     const res = await db
       .collection('products')
-      .deleteOne({ $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] });
+      .deleteOne({
+        $or: [
+          { productId: id },
+          { id },
+          { productID: id },
+          { product_id: id },
+          ...(objectId ? [{ _id: objectId }] : []),
+        ],
+      });
     if (!res.deletedCount) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     return NextResponse.json({ ok: true });

@@ -33,8 +33,20 @@ export async function GET() {
 
     const products = docs.map((d) => {
       const createdAtVal = (d as unknown as { createdAt?: unknown }).createdAt;
+
+      const productId =
+        typeof (d as unknown as { productId?: unknown }).productId === 'string'
+          ? ((d as unknown as { productId: string }).productId as string)
+          : typeof (d as unknown as { id?: unknown }).id === 'string'
+            ? ((d as unknown as { id: string }).id as string)
+            : typeof (d as unknown as { productID?: unknown }).productID === 'string'
+              ? ((d as unknown as { productID: string }).productID as string)
+              : typeof (d as unknown as { product_id?: unknown }).product_id === 'string'
+                ? ((d as unknown as { product_id: string }).product_id as string)
+                : (d as unknown as { _id: { toString: () => string } })._id.toString();
+
       return {
-        id: typeof (d as unknown as { productId?: unknown }).productId === 'string' ? (d as unknown as { productId: string }).productId : '',
+        id: productId,
         name: typeof (d as unknown as { name?: unknown }).name === 'string' ? (d as unknown as { name: string }).name : '',
         description: typeof (d as unknown as { description?: unknown }).description === 'string'
           ? (d as unknown as { description: string }).description

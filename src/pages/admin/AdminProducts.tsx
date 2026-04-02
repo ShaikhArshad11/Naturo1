@@ -163,11 +163,17 @@ export default function AdminProducts() {
         await patchProduct(editing.id, { ...(form as Product), benefits, ingredients, image2: undefined });
         toast.success('Product updated');
       }
+    } catch {
+      toast.error('Failed to save product');
+      return;
+    }
 
+    try {
       await refresh();
       close();
     } catch {
-      toast.error('Failed to save product');
+      close();
+      toast.error('Saved, but failed to refresh products. Please reload the page.');
     }
   };
 
