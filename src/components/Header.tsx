@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShoppingCart, User, Menu, X, LogOut } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, LogOut, Megaphone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import {
@@ -24,10 +24,32 @@ export default function Header() {
   const { user, cartCount, logout } = useApp();
   const router = useRouter();
   const pathname = usePathname();
+  const [announcement, setAnnouncement] = useState<{ enabled: boolean; text: string } | null>(null);
 
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch('/api/site-settings/announcement', { cache: 'no-store' })
+      .then(async (res) => {
+        if (!res.ok) throw new Error('Request failed');
+        return (await res.json()) as { enabled?: boolean; text?: string };
+      })
+      .then((data) => {
+        if (!mounted) return;
+        setAnnouncement({ enabled: Boolean(data.enabled), text: typeof data.text === 'string' ? data.text : '' });
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setAnnouncement(null);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const isActive = (to: string) => {
     if (!pathname) return false;
@@ -37,9 +59,20 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-dark-green border-b border-dark-green-foreground/10">
+      {announcement?.enabled && announcement.text ? (
+        <div className="bg-black text-white">
+          <div className="container-main px-4 md:px-8 h-9 flex items-center justify-center text-xs sm:text-sm font-medium tracking-wide">
+            <span className="inline-flex items-center gap-2">
+              <Megaphone className="h-4 w-4" />
+              {announcement.text}
+            </span>
+          </div>
+        </div>
+      ) : null}
+
       <div className="container-main flex items-center justify-between h-16 px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/naturo1.PNG" alt="Naturo Logo" className="h-10 w-10 object-cover" />
+          <img src="/logo.png" alt="Naturo Logo" className="h-11 w-11 md:h-12 md:w-12 object-cover" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -47,7 +80,11 @@ export default function Header() {
             <Link
               key={l.to}
               href={l.to}
-              className={`text-sm font-medium transition-colors ${isActive(l.to) ? 'text-dark-green-foreground' : 'text-dark-green-foreground/75 hover:text-dark-green-foreground'}`}
+              className={`text-sm font-medium transition-colors relative px-1 py-1 ${
+                isActive(l.to)
+                  ? 'text-dark-green-foreground after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:bg-primary after:rounded-full'
+                  : 'text-dark-green-foreground/75 hover:text-dark-green-foreground'
+              }`}
             >
               {l.label}
             </Link>
@@ -120,7 +157,11 @@ export default function Header() {
             <Link
               key={l.to}
               href={l.to}
-              className={`block py-2 text-sm font-medium transition-colors ${isActive(l.to) ? 'text-dark-green-foreground' : 'text-dark-green-foreground/80 hover:text-dark-green-foreground'}`}
+              className={`block py-2 text-sm font-medium transition-colors rounded-lg px-3 ${
+                isActive(l.to)
+                  ? 'text-dark-green-foreground bg-dark-green-foreground/10'
+                  : 'text-dark-green-foreground/80 hover:text-dark-green-foreground hover:bg-dark-green-foreground/5'
+              }`}
             >
               {l.label}
             </Link>

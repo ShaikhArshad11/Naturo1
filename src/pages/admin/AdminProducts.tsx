@@ -5,6 +5,8 @@ import { Product } from '@/types';
 import { toast } from 'sonner';
 import { Pencil, Trash2, Plus, X, Upload } from 'lucide-react';
 
+const categoryOptions = ['Dry Fruits', 'Seeds', 'Gift Hampers', 'Chocolate Beverages', 'dehydrated fruits'] as const;
+
 const emptyProduct: Omit<Product, 'id' | 'createdAt'> = {
   name: '', description: '', price: 0, originalPrice: 0, category: '', image: '',
   benefits: [''], ingredients: [''], usage: '', rating: 4.5, reviews: 0, inStock: true, featured: false, bestSeller: false,
@@ -225,9 +227,16 @@ export default function AdminProducts() {
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">Category</label>
-              <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                placeholder="e.g. Herbal Juices, Natural Supplements..."
-                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
+              <select
+                value={form.category || ''}
+                onChange={e => setForm({ ...form, category: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              >
+                <option value="" disabled>Select category</option>
+                {categoryOptions.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">Price (₹)</label>

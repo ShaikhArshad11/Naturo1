@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Suraj Naturo',
   description: 'Premium Cashews & Dry Fruits',
   icons: {
-    icon: '/naturo1.PNG',
+    icon: '/logo.png',
   },
 };
 

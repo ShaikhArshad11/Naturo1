@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <img src="/naturo1.PNG" alt="Naturo Logo" className="h-16 w-16 object-cover" />
+              <img src="/logo.png" alt="Naturo Logo" className="h-20 w-20 object-cover" />
             </Link>
             <p className="text-dark-green-foreground/70 text-sm leading-relaxed">
               Premium cashews & dry fruits, handpicked for freshness and quality.

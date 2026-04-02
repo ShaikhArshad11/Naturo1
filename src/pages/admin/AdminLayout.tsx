@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
-import { LayoutDashboard, Package, ShoppingCart, Users, Mail, LogOut, Star, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, Mail, LogOut, Star, Menu, X, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -14,6 +14,7 @@ const navItems = [
   { label: 'Customers', to: '/admin/customers', icon: Users },
   { label: 'Messages', to: '/admin/messages', icon: Mail },
   { label: 'Reviews', to: '/admin/reviews', icon: Star },
+  { label: 'Settings', to: '/admin/settings', icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -38,7 +39,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-60 bg-dark-green text-dark-green-foreground shrink-0 flex-col">
         <div className="p-4 flex items-center gap-2 border-b border-dark-green-foreground/10">
-          <img src="/naturo1.PNG" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
           <span className="font-serif text-lg font-semibold">Admin Panel</span>
         </div>
         <nav className="flex-1 p-3 space-y-1">
@@ -85,7 +86,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Menu className="h-5 w-5" />
             </button>
             <div className="flex items-center gap-2">
-              <img src="/naturo1.PNG" alt="Logo" className="h-7 w-7 rounded-full object-cover" />
+              <img src="/logo.png" alt="Logo" className="h-7 w-7 rounded-full object-cover" />
               <span className="font-serif text-base font-semibold">Admin</span>
             </div>
             <button
@@ -119,7 +120,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <div className="absolute left-0 top-0 h-full w-[80%] max-w-xs bg-dark-green text-dark-green-foreground shadow-2xl flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-dark-green-foreground/10">
               <div className="flex items-center gap-2">
-                <img src="/naturo1.PNG" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
+                <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
                 <span className="font-serif text-lg font-semibold">Admin Panel</span>
               </div>
               <button

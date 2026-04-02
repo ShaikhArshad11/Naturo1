@@ -26,7 +26,7 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-dark-green flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/naturo1.PNG" alt="Naturo" className="h-16 w-16 rounded-full mx-auto mb-4 object-cover" />
+          <img src="/logo.png" alt="Naturo" className="h-16 w-16 rounded-full mx-auto mb-4 object-cover" />
           <h1 className="text-3xl font-serif text-dark-green-foreground">Admin Panel</h1>
           <p className="text-dark-green-foreground/60 text-sm mt-2">Secure admin access only</p>
         </div>

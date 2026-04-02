@@ -6,7 +6,7 @@ import * as store from '@/store';
 import { toast } from 'sonner';
 import { Star } from 'lucide-react';
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, hidePrice = false }: { product: Product; hidePrice?: boolean }) {
   const { refreshCart } = useApp();
 
   const handleAdd = () => {
@@ -76,12 +76,16 @@ export default function ProductCard({ product }: { product: Product }) {
         <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">{product.description}</p>
 
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-baseline gap-2">
-            <span className="text-foreground font-semibold text-base">₹{product.price}</span>
-            {product.originalPrice && (
-              <span className="text-muted-foreground text-sm line-through">₹{product.originalPrice}</span>
-            )}
-          </div>
+          {!hidePrice ? (
+            <div className="flex items-baseline gap-2">
+              <span className="text-foreground font-semibold text-base">₹{product.price}</span>
+              {product.originalPrice && (
+                <span className="text-muted-foreground text-sm line-through">₹{product.originalPrice}</span>
+              )}
+            </div>
+          ) : (
+            <div />
+          )}
 
           <button
             onClick={handleAdd}

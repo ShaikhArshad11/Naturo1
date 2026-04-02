@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongo';
+import { ObjectId } from 'mongodb';
 
 type UpdateProductBody = {
   name?: unknown;
@@ -26,8 +27,12 @@ export async function GET(_req: Request, ctx: Params) {
     const { id } = await ctx.params;
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
+    const objectId = ObjectId.isValid(id) ? new ObjectId(id) : null;
+
     const db = await getDb();
-    const doc = await db.collection('products').findOne({ $or: [{ productId: id }, { id }] });
+    const doc = await db
+      .collection('products')
+      .findOne({ $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] });
     if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     const createdAtVal = (doc as unknown as { createdAt?: unknown }).createdAt;
@@ -73,6 +78,8 @@ export async function PATCH(req: Request, ctx: Params) {
     const { id } = await ctx.params;
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
+    const objectId = ObjectId.isValid(id) ? new ObjectId(id) : null;
+
     const body = (await req.json()) as UpdateProductBody;
 
     const update: Record<string, unknown> = { updatedAt: new Date() };
@@ -102,7 +109,7 @@ export async function PATCH(req: Request, ctx: Params) {
 
     const db = await getDb();
     const res = await db.collection('products').findOneAndUpdate(
-      { $or: [{ productId: id }, { id }] },
+      { $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] },
       { $set: update },
       { returnDocument: 'after' },
     );
@@ -153,8 +160,12 @@ export async function DELETE(_req: Request, ctx: Params) {
     const { id } = await ctx.params;
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
+    const objectId = ObjectId.isValid(id) ? new ObjectId(id) : null;
+
     const db = await getDb();
-    const res = await db.collection('products').deleteOne({ $or: [{ productId: id }, { id }] });
+    const res = await db
+      .collection('products')
+      .deleteOne({ $or: [{ productId: id }, { id }, ...(objectId ? [{ _id: objectId }] : [])] });
     if (!res.deletedCount) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     return NextResponse.json({ ok: true });

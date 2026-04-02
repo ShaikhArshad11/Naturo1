@@ -337,15 +337,13 @@
 //       </section>
 //     </div>
 //   );
-// }
-
-
 'use client';
 
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { subscribeNewsletter } from '@/store';
 import { useMemo, useState, useEffect, useRef } from 'react';
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import { toast } from 'sonner';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Review, Product } from '@/types';
@@ -355,9 +353,16 @@ import { Leaf, ShieldCheck, Award, Truck, Heart, Star, X, ArrowRight, Sparkles }
 const commitments = [
   { icon: Leaf, title: '100% Natural', desc: 'Every ingredient is sourced from nature, no synthetics ever.', color: '#4ade80' },
   { icon: ShieldCheck, title: 'Chemical-Free', desc: 'No harmful chemicals, preservatives, or artificial additives.', color: '#60a5fa' },
-  { icon: Award, title: 'GMP Certified', desc: 'Manufactured in GMP certified facilities for quality assurance.', color: '#f59e0b' },
   { icon: Truck, title: 'Fast Delivery', desc: 'Quick and reliable delivery across India within 3-5 days.', color: '#a78bfa' },
   { icon: Heart, title: 'Trusted Brand', desc: 'Over 10,000+ happy customers trust Naturo for their wellness.', color: '#f472b6' },
+];
+
+const homeCategories = [
+  { name: 'Dry Fruits', accent: '#2d6a4f', image: '/dry-fruits.png' },
+  { name: 'Seeds', accent: '#40916c', image: '/seeds.png' },
+  { name: 'Gift Hampers', accent: '#f59e0b', image: '/gift.png' },
+  { name: 'Chocolate Beverages', accent: '#a78bfa', image: '/chocolates.png' },
+  { name: 'Dehydrated Fruits', accent: '#f472b6', image: '/fruits.png' },
 ];
 
 /* ── Floating particle background ── */
@@ -403,9 +408,9 @@ function ParticleField() {
 }
 
 /* ── Magnetic button wrapper ── */
-function MagneticBtn({ children, className, href }: { children: React.ReactNode; className?: string; href: string }) {
+function MagneticBtn({ children, className, href }: { children: ReactNode; className?: string; href: string }) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const handleMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMove = (e: MouseEvent<HTMLAnchorElement>) => {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -514,6 +519,7 @@ export default function Home() {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewForm, setReviewForm] = useState({ name: '', email: '', text: '', rating: 5 });
   const { user } = useApp();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const featured = products.filter(p => p.featured || p.bestSeller).slice(0, 8);
@@ -521,6 +527,7 @@ export default function Home() {
   const allTestimonials = reviews.map(r => ({ name: r.name, text: r.text, rating: r.rating }));
 
   const heroAnim = useScrollAnimation(0.1);
+  const catAnim = useScrollAnimation();
   const prodAnim = useScrollAnimation();
   const whyAnim = useScrollAnimation();
   const testAnim = useScrollAnimation();
@@ -596,7 +603,7 @@ export default function Home() {
         .naturo-badge::after {
           content:'';position:absolute;inset:0;
           background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.35) 50%,transparent 60%);
-          transform:translateX(-100%);animation:shimmer 3s ease-in-out infinite 1s;
+          opacity:0;transition:opacity 0.4s;
         }
         @keyframes shimmer { to { transform:translateX(200%); } }
 
@@ -636,6 +643,13 @@ export default function Home() {
           transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
                       border-color 0.3s, box-shadow 0.35s;
         }
+        .naturo-cat-media { position:absolute; inset:0; z-index:0; }
+        .naturo-cat-media img { width:100%; height:100%; object-fit:cover; transform:scale(1.03); transition:transform 0.7s cubic-bezier(0.16,1,0.3,1); filter:saturate(1.05) contrast(1.05); }
+        .naturo-cat-media::after {
+          content:''; position:absolute; inset:0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.52) 45%, rgba(0,0,0,0.68) 100%);
+        }
+        .naturo-cat-card:hover .naturo-cat-media img { transform:scale(1.12); }
         .naturo-cat-card::before {
           content:'';position:absolute;inset:0;
           background:radial-gradient(circle at 50% 80%,var(--color-primary,#4ade80)22%,transparent 70%);
@@ -667,6 +681,23 @@ export default function Home() {
           transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),background 0.3s;
         }
         .naturo-commit-card:hover .naturo-commit-icon { transform:scale(1.2) rotate(10deg); }
+
+        /* Mobile infinite slider for commitments */
+        .naturo-commit-slider { overflow:hidden; }
+        .naturo-commit-track {
+          display:flex;
+          width:max-content;
+          gap:16px;
+          animation: naturoCommitMarquee 16s linear infinite;
+          will-change: transform;
+        }
+        @keyframes naturoCommitMarquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .naturo-commit-track { animation: none; }
+        }
 
         /* Review card */
         .naturo-review-card {
@@ -830,6 +861,49 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── CATEGORIES ── */}
+        <section ref={catAnim.ref} className="section-padding bg-card relative overflow-hidden">
+          <div className="naturo-cat-bg" aria-hidden="true" />
+          <div className={`container-main relative z-10 naturo-reveal ${catAnim.isVisible ? '' : 'hidden'}`}>
+            <div className="text-center mb-12">
+              <span className="text-primary text-sm font-medium uppercase tracking-widest">Categories</span>
+              <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-2">Shop by Category</h2>
+              <p className="text-muted-foreground text-sm mt-3 max-w-2xl mx-auto">
+                Explore our curated range — premium dry fruits, seeds, hampers, beverages, and more.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+              {homeCategories.map((c, i) => (
+                <Link
+                  key={c.name}
+                  href={`/shop?category=${encodeURIComponent(c.name)}`}
+                  className="naturo-cat-card group"
+                  style={{ animationDelay: `${i * 90}ms`, ['--color-primary' as string]: c.accent } as CSSProperties}
+                >
+                  <span className="naturo-cat-media" aria-hidden="true">
+                    <img src={c.image} alt="" />
+                  </span>
+                  <span className="naturo-cat-orb o1" style={{ background: c.accent }} aria-hidden="true" />
+                  <span className="naturo-cat-orb o2" style={{ background: c.accent }} aria-hidden="true" />
+
+                  <div className="relative z-10">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl border border-border bg-card mb-4 group-hover:border-primary/40 transition-colors">
+                      <span className="text-lg font-serif text-foreground">{String(i + 1).padStart(2, '0')}</span>
+                    </div>
+                    <div className="font-serif text-lg font-semibold text-white group-hover:text-white transition-colors leading-snug">
+                      {c.name}
+                    </div>
+                    <div className="text-xs text-white/85 mt-2">
+                      Explore
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── BEST SELLERS ── */}
         <section ref={prodAnim.ref} className="section-padding">
           <div className={`container-main naturo-reveal ${prodAnim.isVisible ? '' : 'hidden'}`}>
@@ -840,7 +914,7 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 naturo-stagger">
               {featured.map((p, i) => (
                 <div key={p.id} style={{ animationDelay: `${i * 80}ms` }}>
-                  <ProductCard product={p} />
+                  <ProductCard product={p} hidePrice />
                 </div>
               ))}
             </div>
@@ -857,20 +931,42 @@ export default function Home() {
           <div className={`container-main naturo-reveal ${whyAnim.isVisible ? '' : 'hidden'}`}>
             <div className="text-center mb-14">
               <span className="text-primary text-sm font-medium uppercase tracking-widest">Why Us</span>
-              <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-2">Why Choose Naturo</h2>
-              <p className="text-muted-foreground mt-3 max-w-lg mx-auto text-sm">
+              <h2 className="text-4xl md:text-5xl font-serif text-foreground mt-2">Why Choose Naturo</h2>
+              {/* <p className="text-foreground/80 mt-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
                 We are committed to bringing you the purest herbal products, backed by Ayurvedic wisdom and modern quality standards.
-              </p>
+              </p> */}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 naturo-stagger">
+
+            <div className="md:hidden naturo-commit-slider">
+              <div className="naturo-commit-track">
+                {[...commitments, ...commitments].map((c, i) => (
+                  <div
+                    key={`${c.title}-${i}`}
+                    className="naturo-commit-card shrink-0 w-[86vw] max-w-[340px]"
+                    style={{ ['--card-glow' as string]: c.color } as CSSProperties}
+                  >
+                    <div className="naturo-commit-icon" style={{ background: `${c.color}22` }}>
+                      <c.icon className="h-7 w-7" style={{ color: c.color }} />
+                    </div>
+                    <h3 className="font-serif text-xl text-foreground font-semibold mb-2">{c.title}</h3>
+                    <p className="text-foreground/75 text-sm leading-relaxed">{c.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6 naturo-stagger">
               {commitments.map((c, i) => (
-                <div key={c.title} className="naturo-commit-card"
-                  style={{ animationDelay: `${i * 100}ms`, ['--card-glow' as string]: c.color } as React.CSSProperties}>
+                <div
+                  key={c.title}
+                  className="naturo-commit-card"
+                  style={{ animationDelay: `${i * 100}ms`, ['--card-glow' as string]: c.color } as CSSProperties}
+                >
                   <div className="naturo-commit-icon" style={{ background: `${c.color}22` }}>
                     <c.icon className="h-7 w-7" style={{ color: c.color }} />
                   </div>
-                  <h3 className="font-serif text-lg text-foreground font-semibold mb-2">{c.title}</h3>
-                  <p className="text-muted-foreground text-xs leading-relaxed">{c.desc}</p>
+                  <h3 className="font-serif text-xl text-foreground font-semibold mb-2">{c.title}</h3>
+                  <p className="text-foreground/75 text-sm leading-relaxed">{c.desc}</p>
                 </div>
               ))}
             </div>
