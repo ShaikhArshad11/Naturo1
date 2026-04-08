@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Image from "next/image"
 
 const navLinks = [
   { label: 'Home', to: '/' },
@@ -70,9 +71,9 @@ export default function Header() {
         </div>
       ) : null}
 
-      <div className="container-main flex items-center justify-between h-16 px-4 md:px-8">
+      <div className="container-main flex items-center justify-between h-auto px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Naturo Logo" className="h-11 w-11 md:h-12 md:w-12 object-cover" />
+          <img src="/logo.png" alt="Naturo Logo" height={80} width={80} className='py-2' />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
