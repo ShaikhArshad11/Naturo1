@@ -522,99 +522,33 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── CATEGORIES ── */}
-        <section ref={catAnim.ref} className="section-padding bg-card relative overflow-hidden">
-          <div className="naturo-cat-bg" aria-hidden="true" />
-          <div className={`container-main relative z-10 naturo-reveal ${catAnim.isVisible ? '' : 'hidden'}`}>
-            <div className="text-center mb-12">
+        {/* ── CATEGORIES (SIMPLE GRID) ── */}
+        <section ref={catAnim.ref} className="section-padding bg-card">
+          <div className="container-main naturo-reveal">
+            <div className="text-center mb-10">
               <span className="text-primary text-sm font-medium uppercase tracking-widest">Categories</span>
               <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-2">Shop by Category</h2>
               <p className="text-muted-foreground text-sm mt-3 max-w-2xl mx-auto">
                 Explore our curated range — premium dry fruits, seeds, hampers, beverages, and more.
               </p>
             </div>
-
-            {/* Mobile slider */}
-            <div className="sm:hidden relative">
-              <button
-                type="button"
-                aria-label="Scroll left"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-card/80 rounded-full p-2 shadow-md border border-border"
-                style={{ display: 'flex', alignItems: 'center' }}
-                onClick={() => {
-                  const el = document.getElementById('cat-slider');
-                  if (el) el.scrollBy({ left: -220, behavior: 'smooth' });
-                }}
-              >
-                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-              </button>
-              <div
-                id="cat-slider"
-                className="flex gap-4 overflow-x-auto no-scrollbar px-2 py-1 scroll-smooth"
-                style={{ WebkitOverflowScrolling: 'touch' }}
-              >
-                {homeCategories.map((c, i) => (
-                  <Link
-                    key={c.name}
-                    href={`/shop?category=${encodeURIComponent(c.name)}`}
-                    className="naturo-cat-card group min-w-[220px] max-w-[220px] flex-shrink-0"
-                    style={{ animationDelay: `${i * 90}ms`, ['--color-primary' as string]: c.accent } as CSSProperties}
-                  >
-                    <span className="naturo-cat-media" aria-hidden="true">
-                      <img src={c.image} alt="" />
-                    </span>
-                    <span className="naturo-cat-orb o1" style={{ background: c.accent }} aria-hidden="true" />
-                    <span className="naturo-cat-orb o2" style={{ background: c.accent }} aria-hidden="true" />
-                    <div className="relative z-10">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl border border-border bg-card mb-4 group-hover:border-primary/40 transition-colors">
-                        <span className="text-lg font-serif text-foreground">{String(i + 1).padStart(2, '0')}</span>
-                      </div>
-                      <div className="font-serif text-lg font-semibold text-white group-hover:text-white transition-colors leading-snug">
-                        {c.name}
-                      </div>
-                      <div className="text-xs text-white/85 mt-2">
-                        Explore
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-              <button
-                type="button"
-                aria-label="Scroll right"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-card/80 rounded-full p-2 shadow-md border border-border"
-                style={{ display: 'flex', alignItems: 'center' }}
-                onClick={() => {
-                  const el = document.getElementById('cat-slider');
-                  if (el) el.scrollBy({ left: 220, behavior: 'smooth' });
-                }}
-              >
-                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            {/* Desktop grid */}
-            <div className="hidden sm:grid grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-5">
               {homeCategories.map((c, i) => (
                 <Link
                   key={c.name}
                   href={`/shop?category=${encodeURIComponent(c.name)}`}
-                  className="naturo-cat-card group"
-                  style={{ animationDelay: `${i * 90}ms`, ['--color-primary' as string]: c.accent } as CSSProperties}
+                  className="naturo-cat-card text-center"
+                  style={{ ['--color-primary' as string]: c.accent } as CSSProperties}
                 >
                   <span className="naturo-cat-media" aria-hidden="true">
                     <img src={c.image} alt="" />
                   </span>
-                  <span className="naturo-cat-orb o1" style={{ background: c.accent }} aria-hidden="true" />
-                  <span className="naturo-cat-orb o2" style={{ background: c.accent }} aria-hidden="true" />
                   <div className="relative z-10">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl border border-border bg-card mb-4 group-hover:border-primary/40 transition-colors">
-                      <span className="text-lg font-serif text-foreground">{String(i + 1).padStart(2, '0')}</span>
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl border border-border bg-card mb-3">
+                      <span className="text-base font-serif text-foreground">{String(i + 1).padStart(2, '0')}</span>
                     </div>
-                    <div className="font-serif text-lg font-semibold text-white group-hover:text-white transition-colors leading-snug">
+                    <div className="font-serif text-base font-semibold text-white leading-snug">
                       {c.name}
-                    </div>
-                    <div className="text-xs text-white/85 mt-2">
-                      Explore
                     </div>
                   </div>
                 </Link>
